@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'models/auth.dart';
+
 Map<int, Color> color =
 {
 50:Color.fromRGBO(136,14,79, .1),
@@ -13,3 +15,5 @@ Map<int, Color> color =
 800:Color.fromRGBO(136,14,79, .9),
 900:Color.fromRGBO(136,14,79, 1),
 };
+
+Auth? auth;

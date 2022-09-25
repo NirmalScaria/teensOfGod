@@ -2,10 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class PrimaryButton extends StatefulWidget {
-  const PrimaryButton({Key? key, required this.onPressed, required this.text})
+  PrimaryButton(
+      {Key? key,
+      required this.onPressed,
+      required this.text,
+      this.isLoading = false})
       : super(key: key);
   final VoidCallback onPressed;
   final String text;
+  bool isLoading = false;
   @override
   State<PrimaryButton> createState() => _PrimaryButtonState();
 }
@@ -39,11 +44,25 @@ class _PrimaryButtonState extends State<PrimaryButton> {
                 ),
                 onPressed: widget.onPressed,
                 child: Center(
-                    child: Text(widget.text,
+                    child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(widget.text,
                         style: GoogleFonts.poppins(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
-                            color: const Color(0xff000000)))),
+                            color: const Color(0xff000000))),
+                    if (widget.isLoading) const SizedBox(width: 10),
+                    if (widget.isLoading)
+                      const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Color(0xff000000),
+                          ))
+                  ],
+                )),
               ),
             ],
           ),

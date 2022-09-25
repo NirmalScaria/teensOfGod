@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1041900101887",
+    "project_id": "teensofgod-6c42b",
+    "storage_bucket": "teensofgod-6c42b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1041900101887:android:221ee06afe16a6c35c6cca",
+        "android_client_info": {
+          "package_name": "com.example.teens_of_god"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1041900101887-k0tnv507jocanncasrdfhipq0ol5vchb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBldzBLIwoRH75GtKPCxCvXVAS0i0UrdhE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1041900101887-k0tnv507jocanncasrdfhipq0ol5vchb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
