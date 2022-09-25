@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class PrimaryButton extends StatefulWidget {
   const PrimaryButton({Key? key, required this.onPressed, required this.text})
@@ -15,7 +16,7 @@ class _PrimaryButtonState extends State<PrimaryButton> {
     return SizedBox(
         width: MediaQuery.of(context).size.width - 60,
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(8),
           child: Stack(
             children: <Widget>[
               Positioned.fill(
@@ -33,15 +34,66 @@ class _PrimaryButtonState extends State<PrimaryButton> {
               ),
               TextButton(
                 style: TextButton.styleFrom(
-                  padding: const EdgeInsets.all(6.0),
+                  // padding: const EdgeInsets.all(6.0),
                   textStyle: const TextStyle(fontSize: 20),
                 ),
-                onPressed: () {},
+                onPressed: widget.onPressed,
                 child: Center(
                     child: Text(widget.text,
-                        style: TextStyle(
-                          color: Colors.white,
-                        ))),
+                        style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: const Color(0xff000000)))),
+              ),
+            ],
+          ),
+        ));
+  }
+}
+
+class SecondaryButton extends StatefulWidget {
+  const SecondaryButton({Key? key, required this.onPressed, required this.text})
+      : super(key: key);
+  final VoidCallback onPressed;
+  final String text;
+  @override
+  State<SecondaryButton> createState() => _SecondaryButtonState();
+}
+
+class _SecondaryButtonState extends State<SecondaryButton> {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+        width: MediaQuery.of(context).size.width - 60,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Stack(
+            children: <Widget>[
+              Positioned.fill(
+                child: Container(
+                  decoration: const BoxDecoration(
+                    gradient: RadialGradient(
+                      radius: 4,
+                      colors: <Color>[
+                        Color(0xffDBDBDB),
+                        Color(0xffDBDBDB),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  // padding: const EdgeInsets.all(6.0),
+                  textStyle: const TextStyle(fontSize: 20),
+                ),
+                onPressed: widget.onPressed,
+                child: Center(
+                    child: Text(widget.text,
+                        style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: const Color(0xff000000)))),
               ),
             ],
           ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:teens_of_god/models/auth.dart';
-import 'package:teens_of_god/views/login_page.dart';
-
+import 'package:teens_of_god/views/welcome_page.dart';
+import 'package:teens_of_god/globals.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Teens Of God',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch:  MaterialColor(0xFFFFDE6A, color),
       ),
       home: const LoginRouter(),
     );
@@ -28,9 +28,9 @@ class LoginRouter extends StatelessWidget {
   Widget build(BuildContext context) {
     auth authObject = auth();
     if (authObject.isLoggedIn()) {
-      return (LoginPage());
+      return (WelcomePage());
     } else {
-      return (LoginPage());
+      return (WelcomePage());
     }
   }
 }
