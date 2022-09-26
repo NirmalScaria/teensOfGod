@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:teens_of_god/models/mentor.dart';
 
 import 'models/auth.dart';
 
@@ -17,3 +18,5 @@ Map<int, Color> color =
 };
 
 Auth? auth;
+
+  Mentor mentor = Mentor();

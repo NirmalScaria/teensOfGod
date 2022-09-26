@@ -10,6 +10,10 @@ class Auth {
     return prefs.getBool("isLoggedIn") ?? false;
   }
 
+  String getUid() {
+    return prefs.getString("uid") ?? "";
+  }
+
   Future<String> signIn({String? emailId, String? password}) async {
     if (emailId == null ||
         password == null ||
@@ -21,8 +25,10 @@ class Auth {
       final credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: emailId, password: password);
       if (credential.user != null) {
+        print(credential.toString());
         prefs.setBool("isLoggedIn", true);
         prefs.setString("emailId", emailId);
+        prefs.setString("uid", credential.user!.uid);
         return (credential.user!.uid.toString());
       } else {
         return ("FAIL:NOUSER");
@@ -36,6 +42,8 @@ class Auth {
     }
     return ("FAIL");
   }
+
+  
 
   void signOut(BuildContext context) {
     prefs.setBool("isLoggedIn", false);

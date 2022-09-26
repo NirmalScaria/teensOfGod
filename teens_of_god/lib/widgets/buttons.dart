@@ -6,10 +6,12 @@ class PrimaryButton extends StatefulWidget {
       {Key? key,
       required this.onPressed,
       required this.text,
+      this.padding = 30,
       this.isLoading = false})
       : super(key: key);
   final VoidCallback onPressed;
   final String text;
+  int padding = 30;
   bool isLoading = false;
   @override
   State<PrimaryButton> createState() => _PrimaryButtonState();
@@ -19,7 +21,7 @@ class _PrimaryButtonState extends State<PrimaryButton> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        width: MediaQuery.of(context).size.width - 60,
+        width: MediaQuery.of(context).size.width - (widget.padding * 2),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: Stack(
