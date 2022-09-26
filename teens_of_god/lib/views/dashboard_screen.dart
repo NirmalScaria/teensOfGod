@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:teens_of_god/globals.dart';
 import 'package:teens_of_god/models/mentor.dart';
 import 'package:teens_of_god/models/session.dart';
+import 'package:teens_of_god/views/choose_id_screen.dart';
 import 'package:teens_of_god/views/forms/enroll_student.dart';
 import 'package:teens_of_god/views/forms/enroll_volunteer.dart';
 import 'package:teens_of_god/views/widgets/dashboard_statistics.dart';
@@ -101,6 +102,39 @@ class _DashboardScreenState extends State<DashboardScreen> {
               text: "Enroll New Volunteer",
               padding: 20,
             ),
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context)
+                    .push(
+                  MaterialPageRoute(
+                    builder: (context) => ChooseIdScreen(mentor: mentor),
+                  ),
+                )
+                    .then((value) {
+                  loadData();
+                });
+              },
+              child: Container(
+                  margin: const EdgeInsets.symmetric(vertical: 20),
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                      color: const Color(0xffBDC9EA),
+                      borderRadius: BorderRadius.circular(12)),
+                  child: Row(
+                    children: [
+                      Image.asset("lib/assets/print.png",
+                          width: (MediaQuery.of(context).size.width / 2) - 30,
+                          fit: BoxFit.fitWidth),
+                      const SizedBox(width: 20),
+                      Text("Generate\nId Cards",
+                          textAlign: TextAlign.end,
+                          style: GoogleFonts.poppins(
+                              fontSize: 25,
+                              fontWeight: FontWeight.w600,
+                              color: const Color(0xff333333))),
+                    ],
+                  )),
+            )
           ],
         ),
       ),

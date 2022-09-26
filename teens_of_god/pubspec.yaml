@@ -42,6 +42,11 @@ dependencies:
   cloud_firestore: ^3.4.9
   shimmer: ^2.0.0
   uuid: ^3.0.6
+  random_avatar: ^0.0.7
+  syncfusion_flutter_pdf: ^19.1.55-beta
+  path_provider: ^2.0.1
+  open_file: ^3.1.0
+  qr_flutter: ^4.0.0
 
 dev_dependencies:
   flutter_test:

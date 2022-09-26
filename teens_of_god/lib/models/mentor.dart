@@ -15,6 +15,8 @@ class Mentor {
     sessionIds,
     studentsOnboarded,
     volunteersOnboarded,
+    students,
+    volunteers,
   });
   bool isLoaded = false;
   String? uid;
@@ -26,6 +28,8 @@ class Mentor {
   String? city;
   String? mobile;
   List? sessionIds;
+  List? students;
+  List? volunteers;
   int? studentsOnboarded;
   int? volunteersOnboarded;
   Future<bool> loadData(String uid) async {
@@ -43,6 +47,8 @@ class Mentor {
       sessionIds = value.get('sessions');
       studentsOnboarded = value.get('studentsOnboarded');
       volunteersOnboarded = value.get('volunteersOnboarded');
+      students = value.get('students');
+      volunteers = value.get('volunteers');
       isLoaded = true;
       print(value.data());
     });
