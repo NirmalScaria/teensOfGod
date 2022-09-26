@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Teens Of God',
       theme: ThemeData(
-        primarySwatch: MaterialColor(0xFFFFDE6A, color),
+        primarySwatch: MaterialColor(0xFFAD8E1C, color),
       ),
       home: const LoginRouter(),
     );

@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:teens_of_god/globals.dart';
 import 'package:teens_of_god/models/mentor.dart';
 import 'package:teens_of_god/models/session.dart';
+import 'package:teens_of_god/views/forms/enroll_student.dart';
+import 'package:teens_of_god/views/forms/enroll_volunteer.dart';
 import 'package:teens_of_god/views/widgets/dashboard_statistics.dart';
 import 'package:teens_of_god/widgets/buttons.dart';
 import 'package:teens_of_god/widgets/texts.dart';
@@ -69,13 +71,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
             DashboardStatistics(mentor: mentor),
             const SizedBox(height: 10),
             PrimaryButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context)
+                    .push(
+                  MaterialPageRoute(
+                    builder: (context) => EnrollStudent(mentor: mentor),
+                  ),
+                )
+                    .then((value) {
+                  loadData();
+                });
+              },
               text: "Enroll New Student",
               padding: 20,
             ),
             const SizedBox(height: 10),
             PrimaryButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context)
+                    .push(
+                  MaterialPageRoute(
+                    builder: (context) => EnrollVolunteer(mentor: mentor),
+                  ),
+                )
+                    .then((value) {
+                  loadData();
+                });
+              },
               text: "Enroll New Volunteer",
               padding: 20,
             ),

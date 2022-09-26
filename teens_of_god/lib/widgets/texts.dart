@@ -6,9 +6,11 @@ class Description extends StatefulWidget {
     Key? key,
     required this.text,
     this.align = TextAlign.center,
+    this.color = const Color(0xff9d9d9d),
   }) : super(key: key);
   String text;
   TextAlign align = TextAlign.center;
+  Color color = Color(0xff9d9d9d);
   @override
   State<Description> createState() => _DescriptionState();
 }
@@ -21,7 +23,7 @@ class _DescriptionState extends State<Description> {
       textAlign: widget.align,
       style: GoogleFonts.poppins(
           fontSize: 14,
-          color: const Color(0xff9d9d9d),
+          color: widget.color,
           fontWeight: FontWeight.w400),
     );
   }

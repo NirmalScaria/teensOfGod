@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:teens_of_god/models/session.dart';
+import 'package:teens_of_god/models/student.dart';
+import 'package:teens_of_god/models/volunteer.dart';
 
 class Mentor {
   Mentor({
@@ -43,6 +45,33 @@ class Mentor {
       volunteersOnboarded = value.get('volunteersOnboarded');
       isLoaded = true;
       print(value.data());
+    });
+    return (true);
+  }
+
+  Future<bool> addStudent(Student newStudent) async {
+    CollectionReference mentorCollection =
+        FirebaseFirestore.instance.collection('Mentor');
+    await mentorCollection.doc(uid).update({
+      'studentsOnboarded': FieldValue.increment(1),
+      'students': FieldValue.arrayUnion([{
+        'studentId': newStudent.studentId,
+        'name': newStudent.name,
+        'generatedUid': newStudent.generatedUid,
+      }])
+    });
+    return (true);
+  }
+  Future<bool> addVolunteer(Volunteer newVolunteer) async {
+    CollectionReference mentorCollection =
+        FirebaseFirestore.instance.collection('Mentor');
+    await mentorCollection.doc(uid).update({
+      'volunteersOnboarded': FieldValue.increment(1),
+      'volunteers': FieldValue.arrayUnion([{
+        'volunteerId': newVolunteer.volunteerId,
+        'name': newVolunteer.name,
+        'generatedUid': newVolunteer.generatedUid,
+      }])
     });
     return (true);
   }
