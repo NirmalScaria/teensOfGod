@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:teens_of_god/models/mentor.dart';
+import 'package:teens_of_god/models/student.dart';
 import 'package:uuid/uuid.dart';
 
 class Session {
@@ -77,5 +78,74 @@ class Session {
       });
     }
     return (newUid);
+  }
+
+  Future<String> markAttendance(String studentGeneratedId) async {
+    CollectionReference studentCollection =
+        FirebaseFirestore.instance.collection('Student');
+    var value = await studentCollection.doc(studentGeneratedId).get();
+    List studentsSessions = value.get('sessions') as List;
+    bool isFound = false;
+    bool alreadyMarked = false;
+    for (int i = 0; i < studentsSessions.length; i++) {
+      if (studentsSessions[i]['sessionId'] == this.sessionId) {
+        isFound = true;
+        if (studentsSessions[i]['present'] == true) {
+          alreadyMarked = true;
+        } else {
+          studentsSessions[i]['present'] = true;
+          CollectionReference sessionCollection =
+              FirebaseFirestore.instance.collection('Session');
+          await sessionCollection.doc(sessionId).update({
+            'attendedCount': attendedCount! + 1,
+          });
+        }
+      }
+    }
+    if (isFound == false) {
+      return ("WRONGCLASS");
+    } else if (alreadyMarked) {
+      return ("ALREADYMARKED");
+    } else {
+      await studentCollection.doc(studentGeneratedId).update({
+        'sessions': studentsSessions,
+      });
+      return ("SUCCESS");
+    }
+  }
+
+  Future<String> markVolunteerAttendance(String volunteerGeneratedId) async {
+    CollectionReference studentCollection =
+        FirebaseFirestore.instance.collection('Volunteer');
+    var value = await studentCollection.doc(volunteerGeneratedId).get();
+    List studentsSessions = value.get('sessions') as List;
+    bool alreadyMarked = false;
+    for (int i = 0; i < studentsSessions.length; i++) {
+      if (studentsSessions[i]['sessionId'] == this.sessionId) {
+        alreadyMarked = true;
+          CollectionReference sessionCollection =
+              FirebaseFirestore.instance.collection('Session');
+          await sessionCollection.doc(sessionId).update({
+            'volunteers': FieldValue.arrayUnion([volunteerGeneratedId]),
+          });
+      }
+    }
+    if (alreadyMarked) {
+      return ("ALREADYMARKED");
+    } else {
+      // add session to volunteer
+      await studentCollection.doc(volunteerGeneratedId).update({
+        'sessions': FieldValue.arrayUnion([
+          {
+            'date': date,
+            'sessionId': sessionId,
+          }
+        ])
+      });
+      // await studentCollection.doc(volunteerGeneratedId).update({
+      //   'sessions': studentsSessions,
+      // });
+      return ("SUCCESS");
+    }
   }
 }

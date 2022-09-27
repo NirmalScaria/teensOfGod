@@ -161,7 +161,7 @@ class _StudentItemState extends State<StudentItem> {
                   "name": "${student.name}",
                   "class": "${student.className}",
                   "studentId": "${student.studentId}",
-                  "qrValue" : "${student.generatedUid}"
+                  "qrValue" : "S${student.generatedUid}"
                 }''').then((response) {
                 var json = jsonDecode(response.body);
                 String url = (json['response']);

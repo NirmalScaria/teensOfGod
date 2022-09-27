@@ -164,7 +164,7 @@ class _VolunteerItemState extends State<VolunteerItem> {
                   "name": "${volunteer.name}",
                   "class": "${volunteer.location}",
                   "studentId": "${volunteer.volunteerId}",
-                  "qrValue" : "${volunteer.generatedUid}"
+                  "qrValue" : "V${volunteer.generatedUid}"
                 }''').then((response) {
                 var json = jsonDecode(response.body);
                 String url = (json['response']);
