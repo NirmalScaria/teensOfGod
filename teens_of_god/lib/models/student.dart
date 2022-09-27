@@ -39,6 +39,7 @@ class Student {
       sessions = value.get('sessions');
       className = value.get('className');
       mobile = value.get('mobile');
+      studentId = value.get('studentId');
       isLoaded = true;
       print(value.data());
     });

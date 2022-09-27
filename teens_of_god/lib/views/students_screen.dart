@@ -1,16 +1,14 @@
-import 'dart:typed_data';
+import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:teens_of_god/models/mentor.dart';
-import 'package:random_avatar/random_avatar.dart';
 import 'package:teens_of_god/models/student.dart';
-import 'package:teens_of_god/views/student_id_screen.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:open_file/open_file.dart';
+import 'package:http/http.dart' as http;
 
 class StudentsScreen extends StatefulWidget {
   StudentsScreen({Key? key, required this.mentor}) : super(key: key);
@@ -77,7 +75,6 @@ class _StudentItemState extends State<StudentItem> {
             padding: const EdgeInsets.all(6),
             child: const Icon(Icons.person_rounded),
           ),
-          // randomAvatar(widget.name, height: 40, width: 40),
           Container(
             height: 40,
             width: 1,
@@ -108,10 +105,6 @@ class _StudentItemState extends State<StudentItem> {
                 GestureDetector(
                   onTap: () {
                     createPdf(widget.generatedUid);
-                    // Navigator.of(context).push(MaterialPageRoute(
-                    //     builder: (context) => StudentIdScreen(
-                    //           generatedUid: widget.generatedUid,
-                    //         )));
                   },
                   child: Card(
                       child: Padding(
@@ -135,11 +128,67 @@ class _StudentItemState extends State<StudentItem> {
     ));
   }
 
-  
-
   void createPdf(String generatedUid) async {
-    Student student = Student();
-    await student.loadData(generatedUid);
-    
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          var httpClient = HttpClient();
+          Future<File> _downloadFile(String url, String filename) async {
+            var request = await httpClient.getUrl(Uri.parse(url));
+            var response = await request.close();
+            var bytes = await consolidateHttpClientResponseBytes(response);
+            String dir = (await getApplicationDocumentsDirectory()).path;
+            File file = File('$dir/$filename');
+            await file.writeAsBytes(bytes);
+            return file;
+          }
+
+          Student student = Student();
+
+          student.loadData(generatedUid).then(
+            (value) {
+              final queryParameters = {"output": "url"};
+              var uri = Uri.https("us1.pdfgeneratorapi.com",
+                  "/api/v3/templates/481359/output", queryParameters);
+              http.post(uri, headers: {
+                "X-Auth-Key":
+                    "e411fe123ad33a09771cf5013f7a0fd37ce1db2db944f2fa022520bddeb446f4",
+                "X-Auth-Secret":
+                    "b1cc132460cb7a8108b33768b038ac1f9352cfed4559f31d403729da483bcd8a",
+                "X-Auth-Workspace": "alreadynirmalised@gmail.com"
+              }, body: '''{
+                  "name": "${student.name}",
+                  "class": "${student.className}",
+                  "studentId": "${student.studentId}",
+                  "qrValue" : "${student.generatedUid}"
+                }''').then((response) {
+                var json = jsonDecode(response.body);
+                String url = (json['response']);
+                _downloadFile(url, "idCard.pdf").then((pdfFile) {
+                  Navigator.of(context).pop();
+                  OpenFile.open(pdfFile.path);
+                });
+              });
+            },
+          );
+
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                const CircularProgressIndicator(),
+                const SizedBox(height: 15),
+                Text(
+                  "Generating the ID!\nPlease Wait.",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w500, color: Colors.white),
+                ),
+              ],
+            ),
+          );
+        });
   }
 }

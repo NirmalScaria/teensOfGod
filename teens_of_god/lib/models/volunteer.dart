@@ -24,7 +24,7 @@ class Volunteer {
   });
   Future<bool> loadData(String generatedUid) async {
     CollectionReference mentorCollection =
-        FirebaseFirestore.instance.collection('Student');
+        FirebaseFirestore.instance.collection('Volunteer');
     await mentorCollection.doc(generatedUid).get().then((value) {
       this.generatedUid = generatedUid;
       name = value.get('name');
@@ -33,6 +33,7 @@ class Volunteer {
       location = value.get('location');
       sessions = value.get('sessions');
       mobile = value.get('mobile');
+      volunteerId = value.get('volunteerId');
       isLoaded = true;
       print(value.data());
     });
