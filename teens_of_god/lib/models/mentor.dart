@@ -81,4 +81,16 @@ class Mentor {
     });
     return (true);
   }
+  Future<bool> appendSession(String id, DateTime date,) async {
+    CollectionReference mentorCollection =
+        FirebaseFirestore.instance.collection('Mentor');
+        Timestamp timestamp = Timestamp.fromDate(date);
+    await mentorCollection.doc(uid).update({
+      'sessions': FieldValue.arrayUnion([{
+        'id': id,
+        'date': timestamp
+      }])
+    });
+    return (true);
+  }
 }

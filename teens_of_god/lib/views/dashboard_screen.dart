@@ -5,6 +5,7 @@ import 'package:teens_of_god/globals.dart';
 import 'package:teens_of_god/models/mentor.dart';
 import 'package:teens_of_god/models/session.dart';
 import 'package:teens_of_god/views/choose_id_screen.dart';
+import 'package:teens_of_god/views/forms/create_session_screen.dart';
 import 'package:teens_of_god/views/forms/enroll_student.dart';
 import 'package:teens_of_god/views/forms/enroll_volunteer.dart';
 import 'package:teens_of_god/views/widgets/dashboard_statistics.dart';
@@ -52,7 +53,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
             const SizedBox(height: 10),
             OverView(mentor: mentor),
             PrimaryButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context)
+                    .push(
+                  MaterialPageRoute(
+                    builder: (context) => CreateSession(mentor: mentor),
+                  ),
+                )
+                    .then((value) {
+                  setState(() {
+                    loadData();
+                  });
+                });
+              },
               text: "Create new session",
               padding: 20,
             ),
@@ -239,13 +252,29 @@ class _OverViewState extends State<OverView> {
                 : Builder(builder: (context) {
                     List upcomingSessionIds = [];
                     List pastSessionIds = [];
+                    // sort sessionIds based on date in descending order
+                    widget.mentor.sessionIds!.sort((a, b) {
+                      return a['date']!.compareTo(b['date']);
+                    });
                     for (var i = 0; i < mentor.sessionIds!.length; i++) {
                       if ((mentor.sessionIds![i]["date"] as Timestamp)
                           .toDate()
                           .isAfter(DateTime.now())) {
-                        upcomingSessionIds.add(mentor.sessionIds![i]["id"]);
+                        if (upcomingSessionIds.length < 2) {
+                          upcomingSessionIds.add(mentor.sessionIds![i]["id"]);
+                        }
+                      } else {}
+                    }
+                    // reverse sessionIds
+                    mentor.sessionIds = mentor.sessionIds!.reversed.toList();
+                    for (var i = 0; i < mentor.sessionIds!.length; i++) {
+                      if ((mentor.sessionIds![i]["date"] as Timestamp)
+                          .toDate()
+                          .isAfter(DateTime.now())) {
                       } else {
-                        pastSessionIds.add(mentor.sessionIds![i]["id"]);
+                        if (pastSessionIds.length < 2) {
+                          pastSessionIds.add(mentor.sessionIds![i]["id"]);
+                        }
                       }
                     }
                     if (showUpcoming) {
@@ -297,7 +326,7 @@ class _OverViewState extends State<OverView> {
                       scrollDirection: Axis.vertical,
                       itemCount: pastSessionIds.length,
                       itemBuilder: ((context, index) {
-                        return SessionPreview(
+                        return new SessionPreview(
                           index: index,
                           sessionId: pastSessionIds[index],
                           isUpcoming: false,
@@ -346,9 +375,12 @@ class _SessionPreviewState extends State<SessionPreview> {
   }
 
   Session session = Session();
-  DateFormat dateFormat = DateFormat("HH:mm a, dd MMMM yyyy ");
+  DateFormat dateFormat = DateFormat("hh:mm a, dd MMMM yyyy ");
   @override
   Widget build(BuildContext context) {
+    if (widget.sessionId != null && widget.sessionId != session.sessionId) {
+      loadData();
+    }
     return ClipRRect(
       borderRadius: BorderRadius.circular(14),
       child: Container(
