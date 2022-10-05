@@ -3,6 +3,8 @@ import 'package:teens_of_god/globals.dart';
 import 'package:teens_of_god/models/mentor.dart';
 import 'package:teens_of_god/views/dashboard_screen.dart';
 import 'package:teens_of_god/views/profile_screen.dart';
+import 'package:teens_of_god/views/students_screen.dart';
+import 'package:teens_of_god/views/volunteers_screen.dart';
 import 'package:teens_of_god/widgets/buttons.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,12 +17,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   initState() {
-    
     super.initState();
   }
 
   int selectedIndex = 0;
-  
+
   @override
   Widget build(BuildContext context) {
     void _onItemTapped(int index) {
@@ -29,7 +30,12 @@ class _HomePageState extends State<HomePage> {
       });
     }
 
-    List tabs = [const DashboardScreen(), const ProfileScreen()];
+    List tabs = [
+      const DashboardScreen(),
+      StudentsScreen(mentor: mentor),
+      VolunteersScreen(mentor: mentor),
+      const ProfileScreen(),
+    ];
     return Scaffold(
       body: tabs[selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -39,12 +45,22 @@ class _HomePageState extends State<HomePage> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
+            icon: Icon(Icons.school),
+            label: 'Students',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people),
+            label: 'Volunteers',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
           ),
         ],
         currentIndex: selectedIndex,
-        selectedItemColor: const Color(0xff3D8880),
+        selectedItemColor: Color.fromARGB(255, 167, 146, 27),
+        unselectedItemColor: Color.fromARGB(255, 163, 163, 163),
+        unselectedLabelStyle:TextStyle(color:  Color.fromARGB(255, 163, 163, 163)),
         onTap: (index) {
           setState(() {
             _onItemTapped(index);

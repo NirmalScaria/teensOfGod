@@ -18,7 +18,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(child: const Text("Profile")),
           PrimaryButton(
               onPressed: () {
                 auth!.signOut(context);

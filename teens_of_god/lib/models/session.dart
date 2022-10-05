@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:teens_of_god/models/location.dart';
 import 'package:teens_of_god/models/mentor.dart';
 import 'package:teens_of_god/models/student.dart';
 import 'package:uuid/uuid.dart';
@@ -14,6 +15,7 @@ class Session {
     this.noOfStudents,
     this.volunteersId,
     this.date,
+    this.locationId,
   });
   bool isLoaded = false;
   String? sessionId;
@@ -25,6 +27,7 @@ class Session {
   String? className;
   String? topic;
   String? city;
+  String? locationId;
   Future<bool> loadData(String sessionId) async {
     CollectionReference sessionCollection =
         FirebaseFirestore.instance.collection('Session');
@@ -38,6 +41,7 @@ class Session {
       className = value.get('class');
       topic = value.get('topic');
       city = value.get('city');
+      locationId = value.get('locationId');
       isLoaded = true;
       print(value.data());
     });
@@ -62,6 +66,9 @@ class Session {
       'sessionId': newUid,
     });
     await mentor.appendSession(newUid, date ?? DateTime.now());
+    Location location = Location();
+    await location.loadData(locationId ?? '');
+    await location.appendSession(newUid, date ?? DateTime.now());
     CollectionReference studentCollection =
         FirebaseFirestore.instance.collection('Student');
     QuerySnapshot studentQuery =
@@ -80,13 +87,14 @@ class Session {
     return (newUid);
   }
 
-  Future<String> markAttendance(String studentGeneratedId) async {
+  Future<String> markAttendance(String studentGeneratedId, String review, int rating) async {
     CollectionReference studentCollection =
         FirebaseFirestore.instance.collection('Student');
     var value = await studentCollection.doc(studentGeneratedId).get();
     List studentsSessions = value.get('sessions') as List;
     bool isFound = false;
     bool alreadyMarked = false;
+    print(studentsSessions);
     for (int i = 0; i < studentsSessions.length; i++) {
       if (studentsSessions[i]['sessionId'] == this.sessionId) {
         isFound = true;
@@ -94,6 +102,12 @@ class Session {
           alreadyMarked = true;
         } else {
           studentsSessions[i]['present'] = true;
+          if(review != "") {
+            studentsSessions[i]['review'] = review;
+          }
+          if(rating != -1) {
+            studentsSessions[i]['rating'] = rating;
+          }
           CollectionReference sessionCollection =
               FirebaseFirestore.instance.collection('Session');
           await sessionCollection.doc(sessionId).update({

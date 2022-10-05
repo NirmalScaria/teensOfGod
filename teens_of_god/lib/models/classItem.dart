@@ -18,6 +18,7 @@ class ClassItem {
   String? classId;
   String? className;
   String? location;
+  String? locationId;
   Timestamp? createdTimeStamp;
   int? noOfStudents;
   ClassItem({
@@ -26,6 +27,7 @@ class ClassItem {
     this.location,
     this.createdTimeStamp,
     this.noOfStudents,
+    this.locationId,
   });
   Future<bool> loadData(String uid) async {
     CollectionReference mentorCollection =
@@ -37,6 +39,7 @@ class ClassItem {
       createdTimeStamp = value.get('createdTimeStamp');
       noOfStudents = value.get('noOfStudents');
       isLoaded = true;
+      locationId = value.get('locationId');
       print(value.data());
     });
     return (true);
@@ -49,6 +52,7 @@ class ClassItem {
       location: json["location"],
       createdTimeStamp: json["createdTimeStamp"],
       noOfStudents: json["noOfStudents"],
+      locationId: json["locationId"],
     );
   }
 }

@@ -70,103 +70,113 @@ class _SessionPreviewState extends State<SessionPreview> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.access_time_outlined,
-                          color: Color(0xff727272),
-                          size: 16,
-                        ),
-                        const SizedBox(width: 5),
-                        session.isLoaded
-                            ? Text(
-                                dateFormat.format(session.date ?? DateTime.now()),
-                                style: GoogleFonts.poppins(
-                                    color: const Color(0xff727272),
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 12))
-                            : Shimmer.fromColors(
-                                baseColor: Colors.grey[300]!,
-                                highlightColor: Colors.grey[100]!,
-                                child: Container(
-                                  width: 150,
-                                  height: 12,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                      ],
-                    ),
-                    session.isLoaded
-                        ? Text("Session on ${session.topic ?? ""}",
-                            style: GoogleFonts.poppins(
-                                color: const Color(0xff000000),
-                                fontWeight: FontWeight.w400,
-                                fontSize: 12))
-                        : Shimmer.fromColors(
-                            baseColor: Colors.grey[300]!,
-                            highlightColor: Colors.grey[100]!,
-                            child: Container(
-                              width: 220,
-                              height: 16,
-                              color: Colors.grey,
-                            ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.access_time_outlined,
+                            color: Color(0xff727272),
+                            size: 16,
                           ),
-                    Row(
-                      children: [
-                        Text("Class: ",
-                            style: GoogleFonts.poppins(
-                                color: const Color(0xff000000),
-                                fontWeight: FontWeight.w400,
-                                fontSize: 12)),
-                        session.isLoaded
-                            ? Text(session.className ?? "",
-                                style: GoogleFonts.poppins(
-                                    color: const Color(0xff000000),
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 12))
-                            : Shimmer.fromColors(
-                                baseColor: Colors.grey[300]!,
-                                highlightColor: Colors.grey[100]!,
-                                child: Container(
-                                  width: 70,
-                                  height: 12,
-                                  color: Colors.grey,
+                          const SizedBox(width: 5),
+                          session.isLoaded
+                              ? Text(
+                                  dateFormat.format(session.date ?? DateTime.now()),
+                                  style: GoogleFonts.poppins(
+                                      color: const Color(0xff727272),
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 12))
+                              : Shimmer.fromColors(
+                                  baseColor: Colors.grey[300]!,
+                                  highlightColor: Colors.grey[100]!,
+                                  child: Container(
+                                    width: 150,
+                                    height: 12,
+                                    color: Colors.grey,
+                                  ),
                                 ),
+                        ],
+                      ),
+                      session.isLoaded
+                          ? Text("Session on ${session.topic ?? ""}",
+                              style: GoogleFonts.poppins(
+                                  color: const Color(0xff000000),
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12))
+                          : Shimmer.fromColors(
+                              baseColor: Colors.grey[300]!,
+                              highlightColor: Colors.grey[100]!,
+                              child: Container(
+                                width: 220,
+                                height: 16,
+                                color: Colors.grey,
                               ),
-                        const SizedBox(width: 10),
-                        const Icon(
-                          Icons.place,
-                          color: Color(0xff727272),
-                          size: 16,
-                        ),
-                        session.isLoaded
-                            ? Text(session.city ?? "",
-                                style: GoogleFonts.poppins(
-                                    color: const Color(0xff727272),
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 12))
-                            : Shimmer.fromColors(
-                                baseColor: Colors.grey[300]!,
-                                highlightColor: Colors.grey[100]!,
-                                child: Container(
-                                  width: 50,
-                                  height: 12,
-                                  color: Colors.grey,
+                            ),
+                      Row(
+                        children: [
+                          Text("Class: ",
+                              style: GoogleFonts.poppins(
+                                  color: const Color(0xff000000),
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12)),
+                          session.isLoaded
+                              ? Text(session.className ?? "",
+                                  style: GoogleFonts.poppins(
+                                      color: const Color(0xff000000),
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 12))
+                              : Shimmer.fromColors(
+                                  baseColor: Colors.grey[300]!,
+                                  highlightColor: Colors.grey[100]!,
+                                  child: Container(
+                                    width: 70,
+                                    height: 12,
+                                    color: Colors.grey,
+                                  ),
                                 ),
-                              ),
-                      ],
-                    )
-                  ],
+                          const SizedBox(width: 10),
+                          const Icon(
+                            Icons.place,
+                            color: Color(0xff727272),
+                            size: 16,
+                          ),
+                          session.isLoaded
+                              ? Text(session.city ?? "",
+                                  style: GoogleFonts.poppins(
+                                      color: const Color(0xff727272),
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 12))
+                              : Shimmer.fromColors(
+                                  baseColor: Colors.grey[300]!,
+                                  highlightColor: Colors.grey[100]!,
+                                  child: Container(
+                                    width: 50,
+                                    height: 12,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
                 Column(
                   children: [
                     const Icon(Icons.access_time_outlined,
                         color: Color(0xff075E00)),
-                    session.isLoaded
-                        ? widget.isUpcoming
+                    session.isLoaded ?
+                    daysBetween(DateTime.now(),
+                                            session.date ?? DateTime.now()) == 0 ?
+                                            Text(
+                                "Today",
+                                style: GoogleFonts.poppins(
+                                    color: const Color(0xff075E00),
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 12)) :
+                        widget.isUpcoming
                             ? Text(
                                 "in " +
                                     daysBetween(DateTime.now(),

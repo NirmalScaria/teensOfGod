@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     auth = Auth(prefs: prefs);
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Teens Of God',
       theme: ThemeData(
         primarySwatch: MaterialColor(0xFFAD8E1C, color),

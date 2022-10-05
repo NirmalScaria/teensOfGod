@@ -255,6 +255,7 @@ class _CreateSessionState extends State<CreateSession> {
                         className: classes[selectedClass]!.className,
                         date: selectedDate,
                         city: classes[selectedClass]!.location,
+                        locationId: classes[selectedClass]!.locationId,
                         noOfStudents: classes[selectedClass]!.noOfStudents,
                         topic: subjectController.text,
                         volunteersId: selectedVolunteerIds.toList(),

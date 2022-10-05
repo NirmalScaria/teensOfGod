@@ -149,9 +149,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       borderRadius: BorderRadius.circular(12)),
                   child: Row(
                     children: [
-                      Image.asset("lib/assets/print.png",
-                          width: (MediaQuery.of(context).size.width / 2) - 30,
-                          fit: BoxFit.fitWidth),
+                      Expanded(
+                        child: Image.asset("lib/assets/print.png",
+                            fit: BoxFit.fitWidth),
+                      ),
                       const SizedBox(width: 20),
                       Text("Generate\nId Cards",
                           textAlign: TextAlign.end,

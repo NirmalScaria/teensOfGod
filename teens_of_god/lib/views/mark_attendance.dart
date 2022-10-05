@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:teens_of_god/models/classItem.dart';
@@ -39,6 +40,7 @@ class _MarkAttendanceState extends State<MarkAttendance> {
     final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
     Barcode? result;
     QRViewController? controller;
+    bool isListening = false;
     @override
     void reassemble() {
       super.reassemble();
@@ -53,7 +55,12 @@ class _MarkAttendanceState extends State<MarkAttendance> {
       controller = controller;
       controller.scannedDataStream.listen((scanData) {
         setState(() {
-          result = scanData;
+          if(scanData.code != null) {
+            result = scanData;
+            controller.pauseCamera();
+            isListening = false;
+          markAttendance(widget.session, scanData.code!, controller);
+          }
         });
       });
     }
@@ -93,7 +100,7 @@ class _MarkAttendanceState extends State<MarkAttendance> {
                 TextButton(
                     onPressed: () {
                       markAttendance(widget.session,
-                          "Sb8daa80b-7a3c-4a3d-9717-b052cda1809d");
+                          "S4326804a-3a00-4331-be4b-1dd406b8888c", controller!);
                     },
                     child: Text("Mark")),
                 Expanded(
@@ -109,7 +116,7 @@ class _MarkAttendanceState extends State<MarkAttendance> {
             )));
   }
 
-  Future<void> showError(String errorMsg) async {
+  Future<void> showError(String errorMsg, QRViewController controller) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -127,6 +134,7 @@ class _MarkAttendanceState extends State<MarkAttendance> {
             TextButton(
               child: const Text('OK'),
               onPressed: () {
+                controller.resumeCamera();
                 Navigator.of(context).pop();
               },
             ),
@@ -136,15 +144,19 @@ class _MarkAttendanceState extends State<MarkAttendance> {
     );
   }
 
-  Future<void> markAttendance(Session session, String scannedVal) async {
+  Future<void> markAttendance(Session session, String scannedVal, QRViewController controller) async {
     if (scannedVal.substring(0, 1) == 'V') {
       String volunteerId = scannedVal.substring(1);
+
       showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
               title: Text("Mark Attendance"),
-              content: Text("Confirm mark attendance"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [Text("Mark attendance of volunteer")],
+              ),
               actions: [
                 TextButton(
                     onPressed: () {
@@ -168,6 +180,7 @@ class _MarkAttendanceState extends State<MarkAttendance> {
                                     actions: [
                                       TextButton(
                                           onPressed: () {
+                                            controller.resumeCamera();
                                             Navigator.of(context).pop();
                                           },
                                           child: Text("OK"))
@@ -183,7 +196,7 @@ class _MarkAttendanceState extends State<MarkAttendance> {
                             } else {
                               errorMessage = "Unknown error";
                             }
-                            showError(errorMessage);
+                            showError(errorMessage, controller);
                           }
                         },
                       );
@@ -196,22 +209,68 @@ class _MarkAttendanceState extends State<MarkAttendance> {
     } else {
       // student found
       String studentId = scannedVal.substring(1);
+      int studentRating = -1;
+      TextEditingController reviewController = TextEditingController();
+      reviewController.text = "";
       // show dialog
       showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
               title: Text("Mark Attendance"),
-              content: Text("Confirm mark attendance"),
+              content: Container(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text("Enter the student's review (optional)"),
+                    SizedBox(height: 10),
+                    TextField(
+                      controller: reviewController,
+                      minLines: 3,
+                      maxLines: 3,
+                      decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        hintText: "Enter review",
+                      ),
+                    ),
+                    RatingBar(
+                      ratingWidget: RatingWidget(
+                        full: Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child:
+                              Icon(Icons.star, size: 10, color: Colors.amber),
+                        ),
+                        half: Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: Icon(Icons.star_half,
+                              size: 10, color: Colors.amber),
+                        ),
+                        empty: Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: Icon(Icons.star_border,
+                              size: 10, color: Colors.amber),
+                        ),
+                      ),
+                      onRatingUpdate: (rating) {
+                        studentRating = rating.toInt();
+                      },
+                    ),
+                  ],
+                ),
+              ),
               actions: [
                 TextButton(
                     onPressed: () {
+                      controller.resumeCamera();
                       Navigator.of(context).pop();
                     },
                     child: Text("Cancel")),
                 TextButton(
                     onPressed: () {
-                      session.markAttendance(studentId).then(
+                      session
+                          .markAttendance(
+                              studentId, reviewController.text, studentRating)
+                          .then(
                         (response) {
                           Navigator.of(context).pop();
                           if (response == 'SUCCESS') {
@@ -241,7 +300,7 @@ class _MarkAttendanceState extends State<MarkAttendance> {
                             } else {
                               errorMessage = "Unknown error";
                             }
-                            showError(errorMessage);
+                            showError(errorMessage, controller);
                           }
                         },
                       );
